@@ -1,5 +1,5 @@
-from entity import Entity
-from service import Service
+from titanic.entity import Entity
+from titanic.service import Service
 class Controller:
     def __init__(self):
         self.entity = Entity()
