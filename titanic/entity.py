@@ -1,3 +1,11 @@
+from dataclasses import dataclass
+
+@dataclass
 class Entity:
-    def __init__(self):
-        pass
+
+    context: str
+    fname: str
+    train: object
+    test: object
+    id: str
+    label: str
