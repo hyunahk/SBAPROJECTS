@@ -1,7 +1,10 @@
 from titanic.entity import Entity
+
+import numpy as np
+import pandas as pd
 '''
 PassengerId  고객ID,
-Survived 생존여부,
+Survived 생존여부, -> 머신러닝 답
 Pclass 승선권 1 = 1등석, 2 = 2등석, 3 = 3등석,
 Name,
 Sex,
@@ -17,14 +20,25 @@ class Service:
     def __init__(self):
         self.entity = Entity() #@Autowired Entity entity
 
-    def preprocessing(self) -> obejct:
-        pass
+    def new_model(self, payload) -> object:
+        this = self.entity
+        this.context = './data'
+        this.fname = payload
+        return pd.read_csv(this.context + this.fname) # p.139 df = tensor
 
-    def modeling(self):
-        pass
 
-    def learning(self):
-        pass
+    @staticmethod
+    def create_train(this) -> object:
+        return this.train.drop('Survived', axis=1) #train은 답이 제거된 데이터셋이다.
 
-    def submit(self):
-        pass
+    # self 없이 create_label 기능을 만듭니다.
+    @staticmethod
+    def create_label(this) -> object:
+        return this.train['Survived'] #label은 곧 답이 된다.
+
+    # self 없이 차원축소하기위해 drop_feature 기능을 만듭니다.
+    @staticmethod
+    def drop_feature(this, feature) -> object:
+        this.train = this.train.drop([feature], axis = 1)
+        this. test = this.test.drop([feature], axis = 1) #p.149 훈련, 테스트 세트로 나눈다.
+        return this
