@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from pandas import DataFrame
+import os, shutil
 
 class Service:
     def __init__(self):
@@ -16,15 +17,16 @@ class Service:
         myparser = 'html.parser'
         myurl = 'https://comic.naver.com/webtoon/weekday.nhn'
         response = urlopen(myurl)
-        soup = BeautifulSoup(response, myparser)
-        print(type(soup))
+        self.soup = BeautifulSoup(response, myparser)
+        return type(self.soup)
 
-    def create_folder_weekend(self, myweekday, mytitle):
+    def create_folder_weekend(self, foldername):
         weekday_dict = {'mon': '월요일', 'tue': '화요일', 'wed': '수요일', 'thu': '목요일', 'fri': '금요일', 'sat': '토요일', 'sun': '일요일'}
-
+        self.weekday_dict=weekday_dict
         # shutil : shell utility : 고수준 파일 연산. 표준 라이브러리
-        import os, shutil
+        
         myfolder = 'd:\\imsi\\' # 유닉스 기반은 '/'이 구분자
+        self.myfolder = myfolder
 
         try:
             if not os.path.exists(myfolder):
@@ -42,8 +44,11 @@ class Service:
         except FileExistsError as err:
             print(err)
     
-    def save_data(self):
-        mytarget = naver_cartoon.soup.find_all('div', attrs={'class':'thumb'})
+    def set_target(self):
+        self.mytarget = soup.find_all('div', attrs={'class':'thumb'})
+        return len(mytarget)
+
+    def save_data(self, replace_str, mycolumns, filename):
         mylist = [] # 데이터를 저장할 리스트
         for abcd in mytarget:
             myhref = abcd.find('a').attrs['href']
@@ -65,64 +70,14 @@ class Service:
             sublist.append(mytitle)
             sublist.append(mysrc)
             mylist.append(sublist)
-        return mylist
+        mylist=self.mylist
+        Service.saveas_CSV(mycolumns,mylist,filename)
     
-    def fruit(self):
-        html = open('fruits.html', 'r', encoding='utf-8') # fruits.html
-        soup = BeautifulSoup(html, 'html.parser')
-        body = soup.select_one('body')
-        ptag = body.find('p')
-        ptag['id'] = 'apple'
-        body_tag = soup.find('body')
-        idx = 0
-        for child in body_tag.children:
-            idx += 1
-            print(str(idx) + '번째 요소 :', child)
-        mydiv = soup.find('div')
-        print(mydiv)
-        print('나의 부모는')
-        print(mydiv.parent)
-        mytag = soup.find('p', attrs={'class':'hard'})
-        parents = mytag.find_parents()
-        for p in parents:
-            print(p.name)
-        return ptag, ptag['class'], ptag['align'], ptag['id'], body_tag, mytag, mytag.find_parent()
-    
-    def exception(self):
-        try:
-            x = 4
-            y = 0
+    def saveas_CSV(self, mycolumns, mylist, filename):
+        myframe = DataFrame(mylist, columns = mycolumns)
 
-            mydict = {'a':10}
+        filename = 'cartoon.csv'
 
-            print(mydict['b'])
-
-            mylist = [1, 2, 3]
-            print(mylist[4])
-
-            z = x / y
-            print(z)
-
-        except ZeroDivisionError as err:
-            print('0으로 나누시면 안됩니다.')
-            print(err)
-
-        except IndexError as err:
-            print('인덱스 범위 관련 오류 발생')
-            print(err)
-
-        except KeyError as err:
-            print('사전에 해당 키가 없습니다')
-            print('찾고자 하는 키')
-            print(err)
-
-        except Exception as err:
-            print('기타 나머지 예외 발생')
-            print(err)
-
-        else:
-            print('예외가 없으면 이 라인이 실행됩니다.')
-
-        finally:
-           print('예외 발생 여부와 상관이 없이 무조건 실행됩니다.')
-    
+        myframe.to_csv(filename, encoding='utf-8', index=False)
+        print(filename + ' 파일로 저장됨')
+        print('finished')
