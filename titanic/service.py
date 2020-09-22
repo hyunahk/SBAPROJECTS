@@ -1,3 +1,5 @@
+import sys
+sys.path.insert(0, '/Users/kwonhyunah/Desktop/SBAPROJECTS')
 from titanic.entity import Entity
 
 import numpy as np
@@ -19,10 +21,10 @@ Embarked 승선한 항구명 C = 쉐브루, Q = 퀸즈타운, S = 사우스햄�
 class Service:
     def __init__(self):
         self.entity = Entity() #@Autowired Entity entity
+        pass
 
     def new_model(self, payload) -> object:
         this = self.entity
-        this.context = './data'
         this.fname = payload
         return pd.read_csv(this.context + this.fname) # p.139 df = tensor
 
