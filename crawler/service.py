@@ -81,3 +81,5 @@ class Service:
         myframe.to_csv(filename, encoding='utf-8', index=False)
         print(filename + ' 파일로 저장됨')
         print('finished')
+
+    

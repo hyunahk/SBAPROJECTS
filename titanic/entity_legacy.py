@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 @dataclass
-class Entity:
+class Entity2:
     def __init__(self, contect):
         self.context = context #_ 1개는 default 접근의미, __ 2개는 private 접근의미
         self._fname = fname
