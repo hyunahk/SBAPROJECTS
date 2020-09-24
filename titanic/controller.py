@@ -102,8 +102,14 @@ class Controller:
         print(f'KNN 검증결과: {service.accuracy_by_knn(this)}')
         print(f'SVM 검증결과: {service.accuracy_by_svm(this)}')
 
-    def submit(self): # machine 이 된다. 이단계는 캐글에서 내 머신을 보내서 평가받게 하는 것입니다. 
-        pass
+    def submit(self, train, test): # machine 이 된다. 이단계는 캐글에서 내 머신을 보내서 평가받게 하는 것입니다. 
+        this = self.modeling(train, test)
+        clf = RandomForestClassifier()
+        clf.fit(this.train, this.label)
+        prediction = clf.predict(this.test)
+        pd.DataFrame(
+            {'PassengerId': this.id, 'Survived': prediction}
+        ).to_csv(this.context + 'submission.csv', index=False)
 
 
 if __name__ == '__main__':
